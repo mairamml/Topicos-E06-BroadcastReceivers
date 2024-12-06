@@ -3,6 +3,7 @@ package br.ufmg.coltec.topicos_e06_broadcastreceivers;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
@@ -10,6 +11,7 @@ public class MainActivity extends AppCompatActivity {
     private static int CURRENT_THEME = R.style.Theme_TopicosE06BroadcastReceivers;
 
     // TODO: Criar os receivers para tratar a mudança do tema
+    private BatteryReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // TODO: registrar os receivers
+        receiver = new BatteryReceiver((BatteryReceiver.BatteryReceiverListener) this);
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(receiver, filter);
     }
 
     @Override
@@ -25,6 +30,19 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
 
         // TODO: desregistrar os receivers
+        unregisterReceiver(receiver);
+    }
+
+    public void bateriaFraca() {
+        if (CURRENT_THEME != R.style.Theme_TopicosE06BroadcastReceiversLowBattery) {
+            switchActivityTheme(R.style.Theme_TopicosE06BroadcastReceiversLowBattery);
+        }
+    }
+
+    public void bateriaOk() {
+        if (CURRENT_THEME != R.style.Theme_TopicosE06BroadcastReceivers) {
+            switchActivityTheme(R.style.Theme_TopicosE06BroadcastReceivers);
+        }
     }
 
     /**
